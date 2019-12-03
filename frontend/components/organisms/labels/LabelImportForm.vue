@@ -18,8 +18,12 @@
           type="error"
           dismissible
         >
-          The file could not be uploaded. Maybe invalid format.
-          Please check available formats carefully.
+          <div
+            v-for="(message, index) in errorMessages"
+            :key="index"
+          >
+            {{ message }}
+          </div>
         </v-alert>
         <h2>Select a file</h2>
         <v-file-input
@@ -46,6 +50,11 @@ export default {
       type: Function,
       default: () => {},
       required: true
+    },
+    errorMessages: {
+      type: Array,
+      default: () => [],
+      required: true
     }
   },
   data() {
@@ -67,19 +76,18 @@ export default {
     reset() {
       this.$refs.form.reset()
     },
-    create() {
+    async create() {
       if (this.validate()) {
-        this.importLabel({
+        await this.importLabel({
           projectId: this.$route.params.id,
           file: this.file
         })
-          .then((response) => {
-            this.reset()
-            this.cancel()
-          })
-          .catch(() => {
-            this.showError = true
-          })
+        if (this.errorMessages) {
+          this.showError = true
+        } else {
+          this.reset()
+          this.cancel()
+        }
       }
     }
   }

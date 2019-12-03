@@ -15,6 +15,7 @@
     <base-dialog :dialog="importDialog">
       <label-import-form
         :import-label="importLabels"
+        :error-messages="getErrorMessages"
         @close="importDialog=false"
       />
     </base-dialog>
@@ -22,7 +23,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import ActionMenu from '@/components/molecules/ActionMenu'
 import BaseDialog from '@/components/molecules/BaseDialog'
 import LabelCreationForm from '@/components/organisms/labels/LabelCreationForm'
@@ -46,6 +47,10 @@ export default {
         { title: 'Export Labels', icon: 'mdi-download', event: 'download' }
       ]
     }
+  },
+
+  computed: {
+    ...mapGetters('labels', ['getErrorMessages'])
   },
 
   created() {

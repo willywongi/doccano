@@ -3,12 +3,16 @@ import LabelService from '@/services/label.service'
 export const state = () => ({
   items: [],
   selected: [],
-  loading: false
+  loading: false,
+  errors: []
 })
 
 export const getters = {
   isLabelSelected(state) {
     return state.selected.length > 0
+  },
+  getErrorMessages(state) {
+    return Array.from(new Set(state.errors))
   }
 }
 
@@ -34,6 +38,12 @@ export const mutations = {
   },
   setLoading(state, payload) {
     state.loading = payload
+  },
+  addError(state, payload) {
+    state.errors.push(payload)
+  },
+  clearErrors(state) {
+    state.errors = []
   }
 }
 
@@ -78,17 +88,38 @@ export const actions = {
     }
     commit('resetSelected')
   },
-  importLabels({ commit }, payload) {
+  importLabels({ commit, state }, payload) {
     commit('setLoading', true)
+    commit('clearErrors')
     const formData = new FormData()
     formData.append('file', payload.file)
     const reader = new FileReader()
     reader.onload = (e) => {
-      const labels = JSON.parse(e.target.result)
+      let labels
+      try {
+        labels = JSON.parse(e.target.result)
+      } catch (e) {
+        commit('addError', 'Invalid file format.')
+        return
+      }
       for (const label of labels) {
         LabelService.addLabel(payload.projectId, label)
           .then((response) => {
             commit('addLabel', response.data)
+          })
+          .catch((error) => {
+            if (error.response.data.non_field_errors) {
+              error.response.data.non_field_errors.forEach((msg) => {
+                commit('addError', `${label.text} is ${msg}`)
+              })
+            } else if (error.response.data) {
+              for (const field in error.response.data) {
+                const msg = error.response.data[field][0]
+                commit('addError', `Field ${field}: ${msg}`)
+              }
+            } else {
+              commit('addError', 'You cannot use same label name or shortcut key.')
+            }
           })
       }
     }
