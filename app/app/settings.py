@@ -143,6 +143,7 @@ WSGI_APPLICATION = 'app.wsgi.application'
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.github.GithubOAuth2',
     'social_core.backends.azuread_tenant.AzureADTenantOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -158,6 +159,9 @@ SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_KEY = env('OAUTH_AAD_KEY', None)
 SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_SECRET = env('OAUTH_AAD_SECRET', None)
 SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_TENANT_ID = env('OAUTH_AAD_TENANT', None)
 AZUREAD_ADMIN_GROUP_ID = env('AZUREAD_ADMIN_GROUP_ID', None)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('OAUTH_GOOGLE_OAUTH2_KEY', None)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('OAUTH_GOOGLE_OAUTH2_SECRET', None)
 
 if AZUREAD_ADMIN_GROUP_ID:
     SOCIAL_AUTH_AZUREAD_TENANT_OAUTH2_RESOURCE = 'https://graph.microsoft.com/'
@@ -175,6 +179,7 @@ SOCIAL_AUTH_PIPELINE = [
     'social_core.pipeline.user.user_details',
     'server.social_auth.fetch_github_permissions',
     'server.social_auth.fetch_azuread_permissions',
+    'server.social_auth.fetch_google_permissions',
 ]
 
 ROLE_PROJECT_ADMIN = env('ROLE_PROJECT_ADMIN', 'project_admin')
