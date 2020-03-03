@@ -200,3 +200,6 @@ bundle/
 webpack-stats.json
 
 .vscode
+
+# Env secrets
+secrets.env
