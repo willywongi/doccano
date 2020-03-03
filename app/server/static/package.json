@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env HOT_RELOAD=1 DEBUG=1 webpack-dev-server",
+    "start": "cross-env HOT_RELOAD=1 DEBUG=1 webpack-dev-server --disable-host-check",
     "build": "webpack",
     "lint.js": "eslint --max-warnings=0 '{components,pages}/**/*.{js,vue}'",
     "lint.pug": "pug-lint components/",
