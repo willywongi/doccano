@@ -9,6 +9,7 @@ const hljsLanguages = require('./components/hljsLanguages');
 const devMode = process.env.DEBUG !== 'False';
 const hotReload = process.env.HOT_RELOAD === '1';
 const webpackHost = process.env.WEBPACK_HOST || '127.0.0.1';
+const webpackURL = process.env.WEBPACK_URL || 'http://127.0.0.1';
 const webpackPort = process.env.WEBPACK_PORT ? parseInt(process.env.WEBPACK_PORT, 10) : 8080;
 const pollMillis = process.env.WEBPACK_POLL_MILLIS ? parseInt(process.env.WEBPACK_POLL_MILLIS, 10) : false;
 const noSourceMap = process.env.SOURCE_MAP === 'False';
@@ -25,7 +26,7 @@ module.exports = {
     mode: devMode ? 'development' : 'production',
     entry: entryPoints,
     output: {
-        publicPath: hotReload ? `http://127.0.0.1:${webpackPort}/` : '',
+        publicPath: hotReload ? `${webpackURL}:${webpackPort}/` : '',
         path: path.join(__dirname, 'bundle'),
         filename: '[name].js'
     },

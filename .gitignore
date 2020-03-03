@@ -202,4 +202,4 @@ webpack-stats.json
 .vscode
 
 # Env secrets
-secrets.env
+secrets.*

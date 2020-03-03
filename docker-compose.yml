@@ -15,7 +15,7 @@ services:
       ALLOW_SIGNUP: "False" 
     env_file: secrets.dev.env
     ports:
-      - 8000:8000
+      - 80:8000
 
   webpack:
     image: node:8
@@ -27,6 +27,7 @@ services:
       WEBPACK_HOST: "0.0.0.0"
       WEBPACK_PORT: "8080"
       WEBPACK_POLL_MILLIS: "1000"
+      WEBPACK_URL: "http://localhost"
     ports:
       - 8080:8080
 
