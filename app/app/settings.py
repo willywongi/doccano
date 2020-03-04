@@ -291,11 +291,11 @@ APPLICATION_INSIGHTS = {
 }
 
 ## necessary for email verification setup
-# EMAIL_USE_TLS = True
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'random@gmail.com'
-# EMAIL_HOST_PASSWORD = 'gfds6jk#4ljIr%G8%'
-# EMAIL_PORT = 587
+EMAIL_HOST = env('EMAIL_HOST', None)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', None)
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', None)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', True)
+EMAIL_PORT = env('EMAIL_PORT', 587)
 #
 ## During development only
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
