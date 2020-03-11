@@ -337,8 +337,11 @@ if settings.EVERYONE_IS_ANNOTATOR:
 
         role = Role.objects.get(name=settings.ROLE_ANNOTATOR)
         rolemappings = {(m.user_id, m.project_id): m.role_id for m in RoleMapping.objects.all()}
-    
-        RoleMapping.objects.bulk_create([RoleMapping(role_id=role.id, user_id=user.id, project_id=project.id) 
-                                            for user, project in product(users, projects)
-                                            if (user.id, project.id) not in rolemappings])
+        new_rolemappings = []
+        for user, project in product(users, projects):
+            if (user.id, project.id) not in rolemappings:
+                new_rolemappings.append(RoleMapping(role_id=role.id, user_id=user.id, project_id=project.id))
+                if project not in user.projects:
+                    user.projects.add(project)
+        RoleMapping.objects.bulk_create(new_rolemappings)
         
