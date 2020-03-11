@@ -341,7 +341,6 @@ if settings.EVERYONE_IS_ANNOTATOR:
         for user, project in product(users, projects):
             if (user.id, project.id) not in rolemappings:
                 new_rolemappings.append(RoleMapping(role_id=role.id, user_id=user.id, project_id=project.id))
-                if user not in project.users:
-                    project.users.add(user)
+                project.users.add(user)
         RoleMapping.objects.bulk_create(new_rolemappings)
         
