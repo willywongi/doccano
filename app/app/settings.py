@@ -183,6 +183,10 @@ ROLE_PROJECT_ADMIN = env('ROLE_PROJECT_ADMIN', 'project_admin')
 ROLE_ANNOTATOR = env('ROLE_ANNOTATOR', 'annotator')
 ROLE_ANNOTATION_APPROVER = env('ROLE_ANNOTATION_APPROVER', 'annotation_approver')
 
+# If true: every new user becomes an annotator on every project;
+#   every new project gets every user as annotator.
+EVERYONE_IS_ANNOTATOR = env.bool('EVERYONE_IS_ANNOTATOR', False)
+
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 

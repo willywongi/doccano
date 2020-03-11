@@ -1,3 +1,5 @@
+from itertools import product
+import logging
 import string
 
 from django.db import models
@@ -21,6 +23,7 @@ PROJECT_CHOICES = (
     (SEQ2SEQ, 'sequence to sequence'),
 )
 
+logger = logging.getLogger('django.request')
 
 class Project(PolymorphicModel):
     name = models.CharField(max_length=100)
@@ -318,3 +321,24 @@ def delete_linked_project(sender, instance, using, **kwargs):
         project = Project.objects.get(pk=projectInstance.pk)
         user.projects.remove(project)
         user.save()
+
+
+if settings.EVERYONE_IS_ANNOTATOR:
+    @receiver(post_save)
+    def set_everyone_as_annotator(sender, instance, created, **kwargs):
+        if sender is User:
+            users = [instance]
+            projects = Project.objects.all()
+        elif sender in Project.__subclasses__():
+            users = User.objects.all()
+            projects = [instance]
+        else:
+            return
+
+        role = Role.objects.get(name=settings.ROLE_ANNOTATOR)
+        rolemappings = {(m.user_id, m.project_id): m.role_id for m in RoleMapping.objects.all()}
+    
+        RoleMapping.objects.bulk_create([RoleMapping(role_id=role.id, user_id=user.id, project_id=project.id) 
+                                            for user, project in product(users, projects)
+                                            if (user.id, project.id) not in rolemappings])
+        
