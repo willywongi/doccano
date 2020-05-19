@@ -13,6 +13,6 @@ frontend="${root}/app/server/static"
     npm install
   fi
 
-  echo "Starting webpack"
-  npm start
+  echo "Building static files w/webpack"
+  npm run-script build
 )
